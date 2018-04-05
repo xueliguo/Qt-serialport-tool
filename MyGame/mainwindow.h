@@ -28,10 +28,15 @@ private:
     QPushButton *open_serial;
     QPushButton *push_send;
     QPushButton *auto_send;
+
+    QPushButton *UpdateSendData;
+
     QPushButton *update_serialport;
     QTimer *readTimer;
     QTimer *sendTimer;
     QSerialPort *serial;
+
+    QComboBox *MyBox_SendCmd;
 
     QComboBox *MyBox_Port;
     QComboBox *MyBox_Baudrate;
@@ -49,6 +54,9 @@ private:
 
 
 private:
+///////////////////////////////
+    void SendCMD(void);
+///////////////////////////////
 
     void send_button(void);
 

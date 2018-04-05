@@ -14,6 +14,17 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
+#define HPOIX 0
+#define VPOIX 0
+#define HPOIX1 1
+#define VPOIX1 1
+#define HPOIX2 1
+#define VPOIX2 0
+#define HPOIX3 1
+#define VPOIX3 0
+#define HPOIX4 1
+#define VPOIX4 0
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {    
@@ -31,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Mylabel_HexDisplay = new QCheckBox("十六进制显示");
     Mylabel_HexSend = new QCheckBox("十六进制发送");
+    Mylabel_HexSend->setChecked(true);
     MylabelStopDisplaySendData = new QCheckBox("停止显示发送");
     MylabelStopDisplayReceivedData = new QCheckBox("停止显示接收数据");
 
@@ -56,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     MyEdit_Peiod = new QLineEdit();
 
     MyBox_SendData = new QComboBox();
+    MyBox_SendData->addItem("ac ed 05 04 00 00 00 00 01 ");
 
     MyBox_SendData->setEditable(true);
 
@@ -72,44 +85,56 @@ MainWindow::MainWindow(QWidget *parent) :
     update_serialport = new QPushButton("更新串口");
     update_serialport->setFixedSize(120,40);
 
+    UpdateSendData = new QPushButton("上传数据");
+    UpdateSendData->setFixedSize(120,40);
+
+    MyBox_SendCmd = new QComboBox();
+    MyBox_SendCmd->setEditable(true);
+    MyBox_SendCmd->setFixedSize(200,40);
+    MyBox_SendCmd->addItem("00");
+
+
    QGridLayout *layout = new QGridLayout();
 
-    layout->addWidget(Mylabel_Port,0,0,1,1);
-    layout->addWidget(MyBox_Port,0,1,1,2);
+    layout->addWidget(Mylabel_Port,HPOIX,0,HPOIX+1,1);
+    layout->addWidget(MyBox_Port,HPOIX+0,1,HPOIX+1,2);
 
-    layout->addWidget(Mylabel_Baudrate,1,0,2,1);
-    layout->addWidget(MyBox_Baudrate,1,1,2,2);
+    layout->addWidget(Mylabel_Baudrate,HPOIX+1,VPOIX+0,HPOIX+2,VPOIX+1);
+    layout->addWidget(MyBox_Baudrate,HPOIX+1,VPOIX+1,HPOIX+2,VPOIX+2);
 
-    layout->addWidget(Mylabel_DataBit,2,0,3,1);
-    layout->addWidget(MyBox_DataBit,2,1,3,2);
+    layout->addWidget(Mylabel_DataBit,HPOIX+2,VPOIX+0,HPOIX+3,VPOIX+1);
+    layout->addWidget(MyBox_DataBit,HPOIX+2,VPOIX+1,HPOIX+3,VPOIX+2);
 
-    layout->addWidget(Mylabel_StopBit,3,0,4,1);
-    layout->addWidget(MyBox_StopBit,3,1,4,2);
+    layout->addWidget(Mylabel_StopBit,HPOIX+3,VPOIX+0,HPOIX+4,VPOIX+1);
+    layout->addWidget(MyBox_StopBit,HPOIX+3,VPOIX+1,HPOIX+4,VPOIX+2);
 
-    layout->addWidget(Mylabel_Jiou,4,0,5,1);
-    layout->addWidget(MyBox_Jiou,4,1,5,2);
+    layout->addWidget(Mylabel_Jiou,HPOIX+4,VPOIX+0,HPOIX+5,VPOIX+1);
+    layout->addWidget(MyBox_Jiou,HPOIX+4,VPOIX+1,HPOIX+5,VPOIX+2);
 
-    layout->addWidget(open_serial,6,1,8,3);
+    layout->addWidget(open_serial,HPOIX+6,VPOIX+1,HPOIX+8,VPOIX+3);
 
-    layout->addWidget(Mylabel_HexDisplay,8,0,9,2);
-    layout->addWidget(Mylabel_HexSend,9,0,10,2);
-    layout->addWidget(MylabelStopDisplaySendData,10,0,11,2);
-    layout->addWidget(MylabelStopDisplayReceivedData,11,0,12,2);
+    layout->addWidget(Mylabel_HexDisplay,HPOIX1+8,VPOIX1+0,HPOIX1+9,VPOIX1+2);
+    layout->addWidget(Mylabel_HexSend,HPOIX1+9,VPOIX1+0,HPOIX1+10,VPOIX1+2);
+    layout->addWidget(MylabelStopDisplaySendData,HPOIX1+10,VPOIX1+0,HPOIX1+11,VPOIX1+2);
+    layout->addWidget(MylabelStopDisplayReceivedData,HPOIX1+11,VPOIX1+0,HPOIX1+12,VPOIX1+2);
 
-    layout->addWidget(Mylabel_Period,13,0,14,1);
-    layout->addWidget(MyEdit_Peiod,13,1,14,2);
-    layout->addWidget(Mylabel_Ms,13,3,14,4);
-
-
-    layout->addWidget(MyTextEdit_data,0,4,26,14);
-
-    layout->addWidget(MyBox_SendData,17,4,18,14);
+    layout->addWidget(Mylabel_Period,HPOIX2+13,VPOIX2+0,HPOIX2+14,VPOIX2+1);
+    layout->addWidget(MyEdit_Peiod,HPOIX2+13,VPOIX2+1,HPOIX2+14,VPOIX2+2);
+    layout->addWidget(Mylabel_Ms,HPOIX2+13,VPOIX2+3,HPOIX2+14,VPOIX2+4);
 
 
-    layout->addWidget(push_send,15,1,16,2);
-    layout->addWidget(auto_send,17,1,18,2);
+    layout->addWidget(MyTextEdit_data,HPOIX2+0,VPOIX2+4,HPOIX2+26,VPOIX2+14);
 
-    layout->addWidget(update_serialport,19,1,20,2);
+    layout->addWidget(MyBox_SendData,HPOIX2+18,VPOIX2+4,HPOIX2+19,VPOIX2+14);
+
+
+    layout->addWidget(push_send,HPOIX3+15,VPOIX3+1,HPOIX3+16,VPOIX3+2);
+    layout->addWidget(auto_send,HPOIX3+17,VPOIX3+1,HPOIX3+18,VPOIX3+2);
+
+    layout->addWidget(update_serialport,HPOIX3+19,VPOIX3+1,HPOIX3+20,VPOIX3+2);
+
+    layout->addWidget(UpdateSendData,HPOIX4+20,VPOIX4+4,HPOIX4+21,VPOIX4+5);
+    layout->addWidget(MyBox_SendCmd,HPOIX4+20,VPOIX4+8,HPOIX4+21,VPOIX4+12);
 
     Mywindow->setLayout(layout);
     this->setCentralWidget(Mywindow);
@@ -120,24 +145,24 @@ MainWindow::MainWindow(QWidget *parent) :
     sendTimer = new QTimer(this);
     connect(sendTimer,&QTimer::timeout,this,&MainWindow::send_button);
 
-
     QList<QSerialPortInfo> infos = QSerialPortInfo::availablePorts();
     if(infos.isEmpty())
     {
         MyTextEdit_data->append("Serialport is not available!");
 
-
-
     }else MyTextEdit_data->append("Serialport is available!");
 
     foreach (QSerialPortInfo info, infos) {
+    if(info.portName() !=  "COM1")
     MyBox_Port->addItem(info.portName());
+
    }
     serial = new QSerialPort(this);
     connect(open_serial,&QPushButton::clicked,this,&MainWindow::open_button);
     connect(update_serialport,&QPushButton::clicked,this,&MainWindow::update_serial);
      connect(push_send,&QPushButton::clicked,this,&MainWindow::send_button);
-
+    connect(UpdateSendData,&QPushButton::clicked,this,&MainWindow::SendCMD);
+    connect(auto_send,&QPushButton::clicked,this,&MainWindow::autosend_button);
 }
 
 MainWindow::~MainWindow()
@@ -149,7 +174,9 @@ MainWindow::~MainWindow()
 void MainWindow::setSerialPort()
 {
 
-    QString serialname ="/dev/" + MyBox_Port->currentText();
+
+
+    QString serialname = MyBox_Port->currentText();
 
     MyTextEdit_data->append("set name is :"+serialname);
 
@@ -199,8 +226,11 @@ void MainWindow::update_serial()
 {
     MyBox_Port->clear();
 
-    foreach (QSerialPortInfo info, QSerialPortInfo::availablePorts()) {
-    MyBox_Port->addItem(info.portName());
+    foreach (QSerialPortInfo info, QSerialPortInfo::availablePorts())
+    {
+
+        if(info.portName() !=  "COM1")
+        MyBox_Port->addItem(info.portName());
     }
     MyBox_Port->addItem("ttyS0");
     MyBox_Port->addItem("ttyS1");
@@ -305,7 +335,7 @@ void MainWindow::send_button(void)
                 strHex+="0"+str+" ";
             }
         }
-        if(!Mylabel_HexDisplay->isChecked())
+        if(Mylabel_HexDisplay->isChecked())
 
             MyTextEdit_data->append(m_time.toString(tr("[yyyy-MM-dd hh:mm:ss][发送]"))+"[HEX]"+strHex.toUpper());
     }
@@ -324,10 +354,10 @@ void MainWindow::send_button(void)
 QString MainWindow::ByteArrayToHexString(QByteArray data){
     QString ret(data.toHex().toUpper());
     int len = ret.length()/2;
-    qDebug()<<len;
+   // qDebug()<<len;
     for(int i=1;i<len;i++)
     {
-        qDebug()<<i;
+       // qDebug()<<i;
         ret.insert(2*i+i-1," ");
     }
 
@@ -350,9 +380,16 @@ void MainWindow::readCom(void)
         if( serial->bytesAvailable() >= 4)
         {
             QByteArray temp=serial->readAll();
-            if (!temp.isEmpty() /*&& IsShow*/)
-            {
 
+            char *datatemp = temp.data();
+
+            if (!temp.isEmpty())
+            {
+                for(int i =0;i<sizeof(datatemp)/sizeof(char);i++)
+                {
+
+                 qDebug()<<(int)datatemp[i];
+                }
                 strHex = ByteArrayToHexString(temp);
                 strNomal = temp;
 
@@ -374,12 +411,8 @@ void MainWindow::readCom(void)
         qDebug()<<"Com is null.";
     }
     }
-
-
-
-
-
 }
+
 void MainWindow::open_button()
 {
 
@@ -436,8 +469,71 @@ void MainWindow::open_button()
 
 void MainWindow::autosend_button()
 {
+    if(auto_send->text() == tr("自动发送"))
+    {
+        auto_send->setText(tr("停止"));
+        MyEdit_Peiod->setDisabled(true);
+        sendTimer->start(MyEdit_Peiod->text().toInt());
+    }else
+    {
+        auto_send->setText(tr("自动发送"));
+        MyEdit_Peiod->setDisabled(false);
+        sendTimer->stop();
+    }
 
 }
+
+void MainWindow::SendCMD()
+{
+    unsigned char data[9] = {0xAC,0xed,0x05,0x03,0x00,0x00,0x00,0x00,0x00};
+    unsigned char check = 0;
+    QString str = MyBox_SendCmd->currentText(); // set speed unit is  m/s
+    float speed = str.toFloat();
+  if(speed>1.8)  \
+  {
+      speed = 0;
+      QMessageBox::critical(this,tr("set speed default!"),tr("can't set speed "));
+  }
+    MyTextEdit_data->setText("当前的速度是： "+QString::number(speed));
+
+    int speed2 = int(speed * 100);
+    MyTextEdit_data->append("计算后的速度是： "+QString::number(speed2));
+    data[4] = speed2>>8;
+    data[5] = (speed2&0x00FF);
+
+    data[6] = speed2>>8;
+    data[7] = (speed2&0x00FF);
+
+    for(int i =2; i < 8;i++)
+    {
+       check ^= data[i];
+    }
+
+   data[8] = check;
+
+   QString tem;
+   for(int i = 0;i<9;i++)
+   {
+       if(data[i] < 0x10) tem +="0";
+       tem += QString::number(data[i],16);
+
+       tem +=" ";
+
+   }
+  // temp = temp.toHex();
+   MyBox_SendData->setEditText(tem);
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
